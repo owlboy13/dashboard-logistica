@@ -6,7 +6,7 @@ Dashboard de gestão para **Soluções Logísticas LTDA** — financeiro e perfo
 
 ```bash
 # 1. Clone o repositório
-git clone 
+git clone https://github.com/owlboy13/dashboard-logistica.git
 cd DashFranquia
 
 # 2. Crie e ative o ambiente virtual
