@@ -1,0 +1,91 @@
+/* ── Movee Dashboard — Custom Styles ── */
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background-color: #0d1b2a;
+}
+[data-testid="stSidebar"] * {
+    color: #e8eaf0 !important;
+}
+[data-testid="stSidebar"] .stSelectbox label,
+[data-testid="stSidebar"] .stDateInput label,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: #a8b4c0 !important;
+}
+
+/* Logo área na sidebar */
+.sidebar-logo {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+}
+.sidebar-logo h1 {
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: 1px;
+}
+.sidebar-logo p {
+    font-size: 0.72rem !important;
+    color: #6c8096 !important;
+    margin-top: -0.5rem;
+}
+
+/* Métricas */
+[data-testid="stMetric"] {
+    background: #f8f9fb;
+    border: 1px solid #e8ecf0;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+}
+[data-testid="stMetricLabel"] {
+    font-size: 0.78rem !important;
+    color: #6b7a8d !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+[data-testid="stMetricValue"] {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #1a2332 !important;
+}
+
+/* Header da página */
+.page-header {
+    padding: 0.5rem 0 1.5rem;
+    border-bottom: 2px solid #f0f2f5;
+    margin-bottom: 1.5rem;
+}
+.page-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+.page-header p {
+    color: #ffff;
+    font-size: 0.88rem;
+    margin: 0.2rem 0 0;
+}
+
+/* Badge de perfil na sidebar */
+.perfil-badge {
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 0.4rem;
+}
+.perfil-financeiro { background: #1a4a6b; color: #7ec8f0; }
+.perfil-suporte    { background: #1a4a2b; color: #7ef0a0; }
+
+/* Aniversariantes */
+.aniversario-card {
+    background: linear-gradient(135deg, #fff8e1, #fff3cd);
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.5rem;
+}
