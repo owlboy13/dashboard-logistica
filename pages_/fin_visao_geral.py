@@ -73,19 +73,18 @@ st.caption(f"📅 Período: {periodo_str} — {len(df):,} lançamentos")
 
 # ── KPIs principais ────────────────────────────────────────────────────────
 fat_entregadores = df[df["categoria"] == "entregador"]["valor"].sum()
-fat_franquia     = df[df["categoria"] == "franquia"]["valor"].sum()
-fee_franquia     = df[df["categoria"] == "fee_franquia"]["valor"].sum()
-gorjetas         = df[df["categoria"] == "gorjeta"]["valor"].sum()
-fat_bruto        = fat_entregadores + fat_franquia + fee_franquia + gorjetas
+fat_franquia = df[df["categoria"] == "franquia"]["valor"].sum()
+fee_franquia = df[df["categoria"] == "fee_franquia"]["valor"].sum()
+gorjetas = df[df["categoria"] == "gorjeta"]["valor"].sum()
+fat_bruto = fat_entregadores + fat_franquia + fee_franquia + gorjetas
 fat_sem_franquia = fat_entregadores + gorjetas
 
 st.markdown("### 📊 Faturamento")
-c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Faturamento Bruto",       fmt_brl(fat_bruto))
-c2.metric("Faturamento Entregadores",fmt_brl(fat_sem_franquia))
-c3.metric("Receita da Franquia",     fmt_brl(fat_franquia))
-c4.metric("Fee da Franquia",         fmt_brl(fee_franquia))
-c5.metric("Gorjetas",                fmt_brl(gorjetas))
+c1, c2, c3, c4 = st.columns(4)
+c1.metric("Faturamento Bruto", fmt_brl(fat_bruto))
+c2.metric("Faturamento Entregadores", fmt_brl(fat_sem_franquia))
+c3.metric("Receita da Franquia", fmt_brl(fee_franquia))
+c4.metric("Gorjetas", fmt_brl(gorjetas))
 
 st.markdown("---")
 

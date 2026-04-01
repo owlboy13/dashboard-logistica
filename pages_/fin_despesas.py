@@ -46,7 +46,7 @@ with col2:
 
 with col3:
     st.markdown("**Impostos & Outros**")
-    iss = st.number_input("ISS (R$)", min_value=0.0, value=0.0, step=50.0,  format="%.2f")
+    iss = st.number_input("ISS (R$)", min_value=0.0, value=0.0, step=50.0, format="%.2f")
     irpj_csll = st.number_input("IRPJ/CSLL (R$)", min_value=0.0, value=0.0, step=50.0,  format="%.2f")
     pis_cofins = st.number_input("PIS/Cofins (R$)", min_value=0.0, value=0.0, step=50.0,  format="%.2f")
     ir_aluguel = st.number_input("IR Aluguel (R$)", min_value=0.0, value=0.0, step=50.0,  format="%.2f")
@@ -57,9 +57,9 @@ with col3:
 total_impostos = iss + irpj_csll + pis_cofins + ir_aluguel + inss
 total_sistemas = erp_omie + transfeera + authentique
 total_estrutura = aluguel + agua_luz + colaboradores + contabilidade
-total_outros   = advogados + promocoes
+total_outros = advogados + promocoes
 total_despesas = royalties_auto + total_estrutura + total_sistemas + total_impostos + total_outros
-resultado      = fat_bruto - total_despesas
+resultado = fat_bruto - total_despesas
 
 st.markdown("---")
 st.markdown("### 📊 Resumo Financeiro")
@@ -96,7 +96,7 @@ with col_g1:
         fig = px.pie(df_pizza, values="Valor", names="Categoria", hole=0.4,
                      color_discrete_sequence=["#ef4444","#f97316","#eab308","#22c55e","#3b82f6"])
         fig.update_traces(textposition="outside", textinfo="percent+label")
-        fig.update_layout(height=300, margin=dict(t=10,b=10,l=10,r=10),
+        fig.update_layout(height=300, margin=dict(t=10, b=10, l=10, r=10),
                           paper_bgcolor="rgba(0,0,0,0)", showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
     else:
