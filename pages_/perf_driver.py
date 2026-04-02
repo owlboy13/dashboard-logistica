@@ -15,17 +15,14 @@ def hms(s):
 
 DESC_GORJETA = {"Gorjeta", "UNPAID_TIPS - pagamento de gorjetas retidas",
                   "Lancamento Gorjetas nao repassadas"}
-DESC_NF = {"Corridas concluidas", "Valor por Hora Online",
-                  "Tempo de espera na origem", "ROUTE_WITH_OCCURRENCE",
-                  "ADDITIONAL_PER_ROUTE"}
 DESC_PROMOCAO = {d for d in [] if "Promoc" in d or "Promo" in d}
 
 # ── dados ──────────────────────────────────────────────────────────────────
 df_base = st.session_state.get("df_base")
 df_perf = st.session_state.get("df_perf")
-df_fin  = st.session_state.get("df_fin")
-inicio  = st.session_state.get("inicio")
-fim     = st.session_state.get("fim")
+df_fin = st.session_state.get("df_fin")
+inicio = st.session_state.get("inicio")
+fim = st.session_state.get("fim")
 
 st.markdown("""
     <div class='page-header'>
@@ -35,12 +32,12 @@ st.markdown("""
 
 # Filtra performance e financeiro pelo período
 mask_p = (df_perf["data_do_periodo"] >= inicio) & (df_perf["data_do_periodo"] <= fim)
-mask_f = (df_fin["data_do_periodo_de_referencia"] >= inicio) & \
-         (df_fin["data_do_periodo_de_referencia"] <= fim)
+mask_f = (df_fin["data_do_lancamento_financeiro"] >= inicio) & \
+         (df_fin["data_do_lancamento_financeiro"] <= fim)
 perf = df_perf[mask_p].copy()
-fin  = df_fin[mask_f].copy()
+fin = df_fin[mask_f].copy()
 perf["horas_online"] = perf["tempo_disponivel_absoluto"].apply(hms)
-perf["sub_praca"]    = perf["sub_praca"].fillna("Livre (São Paulo)")
+perf["sub_praca"] = perf["sub_praca"].fillna("Livre (São Paulo)")
 
 # ── Busca ──────────────────────────────────────────────────────────────────
 col_busca, col_info = st.columns([2, 1])
@@ -213,18 +210,17 @@ st.markdown("### 💰 Financeiro no Período")
 if fin_d.empty:
     st.warning("Sem lançamentos financeiros para esse entregador no período.")
 else:
-    nota_fiscal  = fin_d[fin_d["descricao"].isin(DESC_NF)]["valor"].sum()
-    gorjeta      = fin_d[fin_d["descricao"].isin(DESC_GORJETA)]["valor"].sum()
-    promocoes    = fin_d[fin_d["descricao"].str.contains("Promoc|Promo|promoc|promo", na=False)]["valor"].sum()
-    antecipacao  = fin_d[fin_d["descricao"].str.contains("Antecip|antecip", na=False)]["valor"].sum()
-    total_repasse= fin_d["valor"].sum()
+    total_repasse = fin_d["valor"].sum()
+    gorjeta = fin_d[fin_d["descricao"].isin(DESC_GORJETA)]["valor"].sum()
+    promocoes = fin_d[fin_d["descricao"].str.contains("Promoc|Promo|promoc|promo", na=False)]["valor"].sum()
+    antecipacao = fin_d[fin_d["descricao"].str.contains("Antecip|antecip", na=False)]["valor"].sum()
+    nota_fiscal = total_repasse - gorjeta
 
-    f1, f2, f3, f4, f5 = st.columns(5)
-    f1.metric("Total Repasse",  fmt_brl(total_repasse))
+    f1, f2, f3, f4 = st.columns(4)
+    f1.metric("Total Produção",  fmt_brl(total_repasse))
     f2.metric("Nota Fiscal",    fmt_brl(nota_fiscal))
     f3.metric("Gorjeta",        fmt_brl(gorjeta))
-    f4.metric("Promoções",      fmt_brl(promocoes))
-    f5.metric("Antecipações",   fmt_brl(antecipacao) if antecipacao > 0 else "R$ 0,00")
+    f4.metric("Antecipações",   fmt_brl(antecipacao) if antecipacao > 0 else "R$ 0,00")
 
     # Histórico de repasses
     with st.expander("📋 Histórico de lançamentos"):

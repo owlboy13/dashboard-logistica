@@ -35,7 +35,7 @@ ARQUIVOS = {
 }
 
 # Regras SLA — número de critérios atingidos → percentual variável
-SLA_PERCENTUAIS = json.loads(os.getenv('SLA_PERCENTUAL'))
+SLA_PERCENTUAIS = os.getenv('SLA_PERCENTUAL')
 
 # Royalties sobre faturamento bruto
 ROYALTIES_PERCENTUAL = os.getenv('PERCENTUAL_ROYALTIES')

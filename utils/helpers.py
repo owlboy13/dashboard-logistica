@@ -8,7 +8,7 @@ def fmt_brl(valor: float) -> str:
 
 def fmt_pct(valor: float) -> str:
     """Formata como percentual: 36,0%"""
-    return f"{valor * 100:.1f}%"
+    return "{valor * 100:.1f}%"
 
 
 def fmt_horas(horas: float) -> str:
@@ -41,8 +41,8 @@ def sidebar_filtro_data(df_financeiro, df_performance):
     import pandas as pd
 
     # Determina o range disponível nos dados
-    min_fin = df_financeiro["data_do_periodo_de_referencia"].min()
-    max_fin = df_financeiro["data_do_periodo_de_referencia"].max()
+    min_fin = df_financeiro["data_do_lancamento_financeiro"].min()
+    max_fin = df_financeiro["data_do_lancamento_financeiro"].max()
     min_pf = df_performance["data_do_periodo"].min()
     max_pf = df_performance["data_do_periodo"].max()
 

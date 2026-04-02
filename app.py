@@ -89,7 +89,14 @@ def montar_sidebar(df_fin, df_perf):
             </div>""", unsafe_allow_html=True)
 
         classe_perfil = "perfil-financeiro" if perfil == "financeiro" else "perfil-suporte"
-        label_perfil = "Financeiro" if perfil == "financeiro" else "Suporte"
+        match perfil:
+            case "financeiro":
+                label_perfil = "Financeiro"
+            case "admin":
+                label_perfil = "Administrador"
+            case "suporte":
+                label_perfil = "Suporte"
+
         st.markdown(f"""
             <div style='text-align:center; margin-bottom:1.2rem;'>
                 <span style='font-size:0.8rem; color:#a8b4c0;'>👤 {nome}</span><br>

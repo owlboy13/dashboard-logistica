@@ -5,12 +5,15 @@ from utils.helpers import fmt_brl
 
 DESC_FRANQUIA = {"Franquia XY", "XY", "FREQUENCIA - APR FRANQUIA", "FREQUENCIA"}
 DESC_FEE = {"Percentual atingido de rotas completas", "Percentual atingido de hora online"}
+DESC_GORJETA = {"Gorjeta", "UNPAID_TIPS - pagamento de gorjetas retidas",
+                   "Lancamento Gorjetas nao repassadas"}
 
 
 def _cat(df):
     df = df.copy()
     df["categoria"] = "Entregadores"
-    df.loc[df["descricao"].isin(DESC_FEE),      "categoria"] = "Fee Franquia"
+    df.loc[df["descricao"].isin(DESC_FEE), "categoria"] = "Fee Franquia"
+    df.loc[df["descricao"].isin(DESC_GORJETA), "categoria"] = "Gorjeta"
     return df
 
 
@@ -24,18 +27,21 @@ st.markdown("""
         <p>Breakdown completo de faturamento por tipo e entregador</p>
     </div>""", unsafe_allow_html=True)
 
-mask = (df_fin["data_do_periodo_de_referencia"] >= inicio) & \
-       (df_fin["data_do_periodo_de_referencia"] <= fim)
+mask = (df_fin["data_do_lancamento_financeiro"] >= inicio) & \
+       (df_fin["data_do_lancamento_financeiro"] <= fim)
 df = _cat(df_fin[mask])
 
 # ── KPIs ──────────────────────────────────────────────────────────────────
-total = df["valor"].sum()
+total_bruto = df["valor"].sum()
+gorjeta = df[df["categoria"] == DESC_GORJETA]["valor"].sum()
+total = total_bruto - gorjeta
 por_cat = df.groupby("categoria")["valor"].sum()
 
-c1, c2, c3 = st.columns(3)
+c1, c2, c3, c4 = st.columns(4)
 c1.metric("Total de Receitas", fmt_brl(total))
 c2.metric("Entregadores", fmt_brl(por_cat.get("Entregadores", 0)))
-c3.metric("Receita da Franquia", fmt_brl(por_cat.get("Fee Franquia",  0)))
+c3.metric("Receita da Franquia", fmt_brl(por_cat.get("Fee Franquia", 0)))
+c4.metric("Gorjetas", fmt_brl(por_cat.get("Gorjeta", 0)))
 
 st.markdown("---")
 

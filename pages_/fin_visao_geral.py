@@ -2,18 +2,19 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from utils.helpers import fmt_brl, fmt_pct, alerta_sla
+from utils.helpers import fmt_brl, alerta_sla
 
 # ── Constantes de categorização ───────────────────────────────────────────
-DESC_FRANQUIA   = {"Franquia XY", "XY", "FREQUENCIA - APR FRANQUIA", "FREQUENCIA"}
-DESC_FEE        = {"Percentual atingido de rotas completas", "Percentual atingido de hora online"}
-DESC_GORJETA    = {"Gorjeta", "UNPAID_TIPS - pagamento de gorjetas retidas",
+DESC_FRANQUIA = {"Franquia XY", "XY", "FREQUENCIA - APR FRANQUIA", "FREQUENCIA"}
+DESC_FEE = {"Percentual atingido de rotas completas", "Percentual atingido de hora online"}
+DESC_GORJETA = {"Gorjeta", "UNPAID_TIPS - pagamento de gorjetas retidas",
                    "Lancamento Gorjetas nao repassadas"}
 
 COR_POSITIVO = "#1a9e6e"
 COR_NEGATIVO = "#e05252"
-COR_NEUTRO   = "#3b82f6"
-COR_AVISO    = "#f59e0b"
+COR_NEUTRO = "#3b82f6"
+COR_AVISO = "#f59e0b"
+
 
 def _categorizar(df):
     df = df.copy()
@@ -22,6 +23,7 @@ def _categorizar(df):
     df.loc[df["descricao"].isin(DESC_FEE),      "categoria"] = "fee_franquia"
     df.loc[df["descricao"].isin(DESC_GORJETA),  "categoria"] = "gorjeta"
     return df
+
 
 def _gauge(valor_pct, meta, titulo, cor):
     fig = go.Figure(go.Indicator(
@@ -50,12 +52,13 @@ def _gauge(valor_pct, meta, titulo, cor):
     )
     return fig
 
+
 # ── Render ─────────────────────────────────────────────────────────────────
-df_fin  = st.session_state.get("df_fin")
+df_fin = st.session_state.get("df_fin")
 df_perf = st.session_state.get("df_perf")
 df_base = st.session_state.get("df_base")
-inicio  = st.session_state.get("inicio")
-fim     = st.session_state.get("fim")
+inicio = st.session_state.get("inicio")
+fim = st.session_state.get("fim")
 
 st.markdown("""
     <div class='page-header'>
@@ -64,8 +67,8 @@ st.markdown("""
     </div>""", unsafe_allow_html=True)
 
 # Filtra período
-mask = (df_fin["data_do_periodo_de_referencia"] >= inicio) & \
-       (df_fin["data_do_periodo_de_referencia"] <= fim)
+mask = (df_fin["data_do_lancamento_financeiro"] >= inicio) & \
+       (df_fin["data_do_lancamento_financeiro"] <= fim)
 df = _categorizar(df_fin[mask])
 
 periodo_str = f"{inicio.strftime('%d/%m/%Y')} a {fim.strftime('%d/%m/%Y')}"
@@ -76,7 +79,7 @@ fat_entregadores = df[df["categoria"] == "entregador"]["valor"].sum()
 fat_franquia = df[df["categoria"] == "franquia"]["valor"].sum()
 fee_franquia = df[df["categoria"] == "fee_franquia"]["valor"].sum()
 gorjetas = df[df["categoria"] == "gorjeta"]["valor"].sum()
-fat_bruto = fat_entregadores + fat_franquia + fee_franquia + gorjetas
+fat_bruto = fat_entregadores + fat_franquia + fee_franquia
 fat_sem_franquia = fat_entregadores + gorjetas
 
 st.markdown("### 📊 Faturamento")
@@ -100,10 +103,15 @@ else:
     ult = df_sla.sort_values("data_do_periodo_de_referencia").iloc[-1]
     criterios_atingidos = sum([
         1 if ult["percentual_de_tempo_disponivel"] >= ult["criterio_tempo_disponivel"] else 0,
-        1 if ult["percentual_de_aceitacao"]        >= ult["criterio_rotas_aceitas"]    else 0,
-        1 if ult["percentual_de_conclusao"]        >= ult["criterio_rotas_concluidas"] else 0,
+        1 if ult["percentual_de_aceitacao"] >= ult["criterio_rotas_aceitas"]    else 0,
+        1 if ult["percentual_de_conclusao"] >= ult["criterio_rotas_concluidas"] else 0,
     ])
-    pct_variavel = {3: 0.36, 2: 0.33, 1: 0.30, 0: 0.28}[criterios_atingidos]
+
+    from dotenv import load_dotenv
+    import os
+    load_dotenv()
+    SLA_PERCENTUAL = os.getenv('SLA_PERCENTUAL')
+    pct_variavel = SLA_PERCENTUAL[criterios_atingidos]
 
     alerta_sla(criterios_atingidos, pct_variavel)
 
@@ -197,7 +205,7 @@ fig2 = px.bar(
         "franquia":    "#f59e0b",
         "gorjeta":     "#8b5cf6",
     },
-    labels={"mes":"Mês","valor":"Valor (R$)","categoria":"Categoria"},
+    labels={"mes": "Mês", "valor": "Valor (R$)", "categoria": "Categoria"},
 )
 fig2.update_layout(
     height=320, margin=dict(t=10, b=10, l=10, r=10),
